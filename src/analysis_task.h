@@ -9,6 +9,7 @@
 #include <TTree.h>
 #include <TH2F.h>
 
+#include <AnalysisTree/FillTask.hpp>
 #include <AnalysisTree/Detector.hpp>
 #include <AnalysisTree/EventHeader.hpp>
 #include <AnalysisTree/DataHeader.hpp>
@@ -16,31 +17,44 @@
 #include <TH2F.h>
 #include <TH3F.h>
 #include <TProfile.h>
-#include <at_task/Task.h>
 #include <memory>
 #include <string>
 
-class AnalysisTask : public UserFillTask{
+class AnalysisTask : public AnalysisTree::FillTask{
 public:
  AnalysisTask() = default;
   ~AnalysisTask() override = default;
-  void UserInit( std::map<std::string, void*>& branch_map ) override;
-  void UserExec() override;
-  void UserFinish() override;
-  boost::program_options::options_description GetBoostOptions() override;
-  void PreInit() override {};
-  void PostFinish() override {
-    UserTask::PostFinish();
-  }
+  void Init( std::map<std::string, void*>& branch_map ) override;
+  void Exec() override;
+  void Finish() override;
 
 private:
   /* pointers to link tree's branches with */
-  ATI2::Branch* event_header_{nullptr}; 		// event info
-  ATI2::Branch* vtx_tracks_{nullptr}; 		        // reconstructed tracks
-  ATI2::Branch*fhcal_modules_{nullptr}; 		// modules of FhCal branch
+  AnalysisTree::EventHeader* event_header_{nullptr}; 		// event info
+  AnalysisTree::TrackDetector* vtx_tracks_{nullptr}; 		        // reconstructed tracks
+  AnalysisTree::ModuleDetector* fhcal_modules_{nullptr}; 		// modules of FhCal branch
+  AnalysisTree::ModulePositions fhcal_modules_positions_;
   TH1F* pT_distribution_;
   TH1F* fhcal_energy_distribution_;
   TH2F*fhcal_modules_xy_;
-TASK_DEF(AnalysisTask, 0)
+  TH2F* pT_vs_eta;
+  TH2F* pT_vs_phi;
+  TH2F* phi_vs_eta;
+  TH2F* Energy_vs_moduleId;
+  TH1F *Qxall;
+  TH1F *Qyall;
+  TH1F *Qx44;
+  TH1F *Qx90;
+  TH1F *Qy44;
+  TH1F *Qy90;
+  TH2F *ntracksxb;
+  TH1F *fnall;
+  TH1F *fn44;
+  TH1F *fn90;
+  TH1F *Qx44all[9];
+  TH1F *Qy44all[9];
+  TH1F *Qx90all[9];
+  TH1F *Qy90all[9];
+
 };
 #endif // QUALITY_ASSURANCE_SRC_TREE_READER_H_
