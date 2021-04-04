@@ -10,44 +10,43 @@ void AnalysisTask::Init(std::map<std::string, void *> &branch_map) {
   vtx_tracks_ = static_cast<AnalysisTree::TrackDetector *>(branch_map.at("TpcTracks."));
   fhcal_modules_ = static_cast<AnalysisTree::ModuleDetector *>(branch_map.at("FHCalModules."));
   fhcal_modules_positions_ = data_header_->GetModulePositions(0);
- 
 
 
-
+  Bt =new TH1F("B","B",500,0,16);
   pT_distribution_ = new TH1F( "pT_distribution", ";p_{T} [GeV/c];entries", 250, 0., 2.5 );
-  fhcal_energy_distribution_ = new TH1F( "fhcal_energy_distribution", ";E [GeV];entries", 500, 0., 1.0 );
+  fhcal_energy_distribution_ = new TH1F( "fhcal_energy_distribution", ";E [GeV];entries", 500, 0, 1.0 );
   fhcal_modules_xy_ = new TH2F( "fhcal_modules_xy", ";X;Y", 100, -50., 50.0, 100, -50., 50.0 );
   pT_vs_eta =new TH2F("pT_vs_eta",";eta;p_{T} [GeV/c]",100,-3.0,3.0,100,0,2.5);
   pT_vs_phi =new TH2F("pT_vs_phi",";phi [rad];p_{T} [GeV/c]",100,-7.0,7.0,100,0,2.5);
   phi_vs_eta =new TH2F("phi_vs_eta",";eta;phi [rad]",100,-2.5,2.5,100,-7.0,7.0);
-  Energy_vs_moduleId =new TH2F("Energy_vs_moduleId",";moduleId;Energy [GeV]",100,-50,100,100,0,1.0);
-  Qxall =new TH1F ("Qxall", "Distribution of Qx and Qy in FHCal ;value of Qx,Qy,GeV;number of pulses N", 90,-3,3);
-  Qyall =new TH1F ("Qyall", "Distribution of Qy in FHCal;value of Qy,GeV;number of pulses N", 90,-3,3);
-  Qx44 =new TH1F ("Qx44","Distribution of Qx and Qy in first part of FHCal;value of Qx,Qy,Gev;number of pulses N",90,-3,3);
-  Qx90 =new TH1F ("Qx90","Distribution of Qx and Qy in second part of FHCal;value of Qx,Qy,GeV;number of pulses N",90,-3,3);
-  Qy44 =new TH1F ("Qy44","Distribution of Qy in first part of FHCal;value of Qy,Gev;number of pulses N",90,-3,3);
-  Qy90 =new TH1F ("Qy90", "Distribution of Qy in second part of FHCal;value of Qy,Gev;number of pulses N", 90,-3,3);
-  ntracksxb =new TH2F ("ntracksxb","multiplicity versus impact parameter,impact parameter b,fermi;multiplicity,number",90,0,18,90,0,500);
-  fnall =new TH1F ("fnall","Distribution of event plane angle in FHCal;event plane angle fn,rad;number of pulses N",90,-4,4);
-  fn44 =new TH1F ("fn44","Distribution of event plane angle in first part of FHCal;event plane angle fn,rad;number of pulses N",90,-4,4);
-  fn90 =new TH1F ("fn90","Distribution of event plane angle in second part of FHCal;event plane angle fn,rad;number of pulses N",90,-4,4);
+  Energy_vs_moduleId =new TH2F("Energy_vs_moduleId",";moduleId;Energy [GeV]",100,0,90,100,0,5.0);
+  Qxall =new TH1F ("Qxall", "Distribution of Qx and Qy in FHCal ;value of Qx,Qy,GeV;number of pulses N", 100,-3.0,3.0);
+  Qyall =new TH1F ("Qyall", "Distribution of Qy in FHCal;value of Qy,GeV;number of pulses N", 100,-3.0,3.0);
+  Qx44 =new TH1F ("Qx44","Distribution of Qx and Qy in first part of FHCal;value of Qx,Qy,Gev;number of pulses N",100,-3.0,3.0);
+  Qx90 =new TH1F ("Qx90","Distribution of Qx and Qy in second part of FHCal;value of Qx,Qy,GeV;number of pulses N",100,-3.0,3.0);
+  Qy44 =new TH1F ("Qy44","Distribution of Qy in first part of FHCal;value of Qy,Gev;number of pulses N",100,-3.0,3.0);
+  Qy90 =new TH1F ("Qy90", "Distribution of Qy in second part of FHCal;value of Qy,Gev;number of pulses N", 100,-3.0,3.0);
+  ntracksxb =new TH2F ("ntracksxb","multiplicity versus impact parameter,impact parameter b,fermi;multiplicity,number",100,0,16,90,0,500);
+  fnall =new TH1F ("fnall","Distribution of event plane angle in FHCal;event plane angle fn,rad;number of pulses N",100,-4.0,4.0);
+  fn44 =new TH1F ("fn44","Distribution of event plane angle in first part of FHCal;event plane angle fn,rad;number of pulses N",100,-4.0,4.0);
+  fn90 =new TH1F ("fn90","Distribution of event plane angle in second part of FHCal;event plane angle fn,rad;number of pulses N",100,-4.0,4.0);
     for(int j=1;j<9;j++)
     {
-    Qx44all[j]=new TH1F(Form("Qx44all_%i",j),Form("Distribution of Qx in first part of FHCal with centrality %i0%;value of Qx,Gev;number of pulses N",j),90,-4,4);
+    Qx44all[j]=new TH1F(Form("Qx44all_%i",j),Form("Distribution of Qx in first part of FHCal with centrality %i0%;value of Qx,Gev;number of pulses N",j),100,-4.0,4.0);
 
     }
     for(int j=1;j<9;j++)
     {
 
-    Qy44all[j]=new TH1F(Form("Qy44all_%i",j),Form("Distribution of Qy first part of FHCal with centrality %i0%;value of Qy,Gev;number of pulses N",j),90,-4,4);
+    Qy44all[j]=new TH1F(Form("Qy44all_%i",j),Form("Distribution of Qy first part of FHCal with centrality %i0%;value of Qy,Gev;number of pulses N",j),100,-4.0,4.0);
     }
     for(int j=1;j<9;j++)
     {
-    Qx90all[j]=new TH1F(Form("Qx90all_%i",j),Form("Distribution of Qx in second part of FHCal with centrality %i0%;value of Qx,GeV;number of pulses N",j),90,-4,4);
+    Qx90all[j]=new TH1F(Form("Qx90all_%i",j),Form("Distribution of Qx in second part of FHCal with centrality %i0%;value of Qx,GeV;number of pulses N",j),100,-4.0,4.0);
     }
     for(int j=1;j<9;j++)
     {
-    Qy90all[j]=new TH1F(Form("Qy90all_%i",j),Form("Distribution of Qy in second part of FHCal with centrality %i0%;value of Qy,Gev;number of pulses N",j),90,-4,4);
+    Qy90all[j]=new TH1F(Form("Qy90all_%i",j),Form("Distribution of Qy in second part of FHCal with centrality %i0%;value of Qy,Gev;number of pulses N",j),100,-4.0,4.0);
     }
 
 
@@ -63,8 +62,9 @@ void AnalysisTask::Exec() {
 	auto Qy901=0;
         float ResPhin[8]={0,0,0,0,0,0,0,0};
 	float ResN[8]={0,0,0,0,0,0,0,0};
-	auto mc_event=event_header_->GetId();
-	auto stats=.GetChannel(mc_event);
+	auto hit = event_header_->GetChannel(0);
+        auto B = hit.GetField<float>(0);
+	Bt->Fill(B);
 
 	
   for( auto& track : *vtx_tracks_->GetChannels() ){
@@ -81,7 +81,7 @@ void AnalysisTask::Exec() {
       tracks1=tracks1+1;
       }
       
-      ntracksxb->Fill(stats.B(),tracks1);
+      ntracksxb->Fill(B,tracks1);
 
   }
   for( auto& module : *fhcal_modules_->GetChannels()){
@@ -109,7 +109,7 @@ void AnalysisTask::Exec() {
   }
    for(int j=1;j<9;j++)
         {
-        if((j-1)*10<= ((stats.B())*(stats.B())/4) && ((stats.B())*(stats.B())/4)<j*10)
+        if((j-1)*10<= ((B*B)/256)*100 && ((B*B)/256)*100<j*10)
 	{
 
         Qx44all[j]->Fill(Qx441);
@@ -174,6 +174,7 @@ void AnalysisTask::Finish() {
     {
     Qy90all[j]->Write();
     }
+    Bt->Write();
 
 
 }

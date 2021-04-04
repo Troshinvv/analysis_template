@@ -55,6 +55,7 @@ private:
   TH1F *Qy44all[9];
   TH1F *Qx90all[9];
   TH1F *Qy90all[9];
+  TH1F *Bt;
 
 };
 #endif // QUALITY_ASSURANCE_SRC_TREE_READER_H_
