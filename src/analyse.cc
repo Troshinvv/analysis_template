@@ -7,7 +7,6 @@
 #include <AnalysisTree/TaskManager.hpp>
 
 #include "analysis_task.h"
-
 int main(int n_args, char** args){
   if(n_args<2){
     throw std::runtime_error( "Please use: ./acceptance file.list" );

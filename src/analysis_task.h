@@ -19,6 +19,8 @@
 #include <TProfile.h>
 #include <memory>
 #include <string>
+#include <math.h>
+#include <Math/SpecFuncMathMore.h>
 
 class AnalysisTask : public AnalysisTree::FillTask{
 public:
@@ -51,11 +53,22 @@ private:
   TH1F *fnall;
   TH1F *fn44;
   TH1F *fn90;
-  TH1F *Qx44all[9];
-  TH1F *Qy44all[9];
-  TH1F *Qx90all[9];
-  TH1F *Qy90all[9];
+  TH1F *Qx44all[3];
+  TH1F *Qy44all[3];
+  TH1F *Qx90all[3];
+  TH1F *Qy90all[3];
+  TH1F *fn44all[3];
+  TH1F *fn90all[3];
   TH1F *Bt;
+  TH1F *Btt;
+  TH2F *energyvsb;
+  TH2F *gr;
+  TH2F *gr2;
+    float ResPhin[3]={0,0,0};
+   float ResN[3]={0,0,0};
+   TProfile* flowvsB;
+   TProfile* flowvsB2;
+   TH1F *PhiModule;
 
 };
 #endif // QUALITY_ASSURANCE_SRC_TREE_READER_H_
