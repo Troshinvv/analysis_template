@@ -64,7 +64,7 @@ void AnalysisTask::Init(std::map<std::string, void *> &branch_map) {
     gr =new TH2F("gr","resolution for half detector vs impact parameter",3,0,16,100,0,1);
     gr2 =new TH2F("gr2","resolution for all detector vs impact parameter",3,0,16,100,0,1);
      flowvsB = new TProfile("flowvsB", "flow vs impact parameter",100,0,16);
-     flowvsB2 = new TProfile("flowvsB2", "flow vs impact parameter",5,0,16);
+     flowvsB2 = new TProfile("flowvsB2", "flow vs impact parameter",10,0,16);
      PhiModule =new TH1F("PhiModule","PhiModule",90,-4,4);
 
     
@@ -105,11 +105,6 @@ void AnalysisTask::Exec() {
       {
       tracks1=tracks1+1;
       }
-      
-      
-    
-
-
   }
   ntracksxb->Fill(B,tracks1);
   for( auto& module : *fhcal_modules_->GetChannels()){
@@ -141,27 +136,33 @@ void AnalysisTask::Exec() {
 
 
   }
-  for( auto& module : *fhcal_modules_->GetChannels()){
-    auto id = module.GetId();
-    auto module_pos = fhcal_modules_positions_.GetChannel(id);
-if(B<8)
+
+  for( auto& track : *vtx_tracks_->GetChannels() ){
+    auto mom3 = track.GetMomentum3();
+    auto pT = mom3.Pt();
+    auto Eta =track.GetEta();
+    auto Phi =track.GetPhi();
+if(abs(Qx1)<=4 && abs(Qy1)<=4 && abs(Phi)<4)
 {
-	flowvsB2->Fill(B,(cos(module_pos.GetPhi() - atan2(Qy1 - Recy90[1]-Recy44[1],Qx1 - Recx44[1] -Recx90[1])))/Res[0]);
-      flowvsB->Fill(4,(cos(module_pos.GetPhi() - atan2(Qy901 + Qy441 - Recy44[1] - Recy90[1],Qx901 + Qx441 - Recx44[1] -Recx90[1]))));
+  if(B<9 && B>0 &&  (Qx1 - Recx44[1] -Recx90[1])!=0)
+{
+      flowvsB2->Fill(B,(cos(Phi - atan2(Qy1 - Recy90[1]-Recy44[1],Qx1 - Recx44[1] -Recx90[1])))/Res[0]);
+      flowvsB->Fill(4.5,(cos(Phi - atan2(Qy1 - Recy90[1]-Recy44[1],Qx1 - Recx44[1] -Recx90[1])))/Res[0]);
 }
-if(B>=8 && B<13)
+if(B>=9 && B<13 && (Qx1 - Recx44[2] -Recx90[2])!=0)
 {
-	flowvsB2->Fill(B,(cos(module_pos.GetPhi() - atan2(Qy1 - Recy90[2]-Recy44[2],Qx1 - Recx44[2] -Recx90[2])))/Res[1]);
-	flowvsB->Fill(11.5,(cos(module_pos.GetPhi() - atan2(Qy901 + Qy441 - Recy44[2] - Recy90[2],Qx901 + Qx441 - Recx44[2] -Recx90[2]))));
+        flowvsB2->Fill(B,(cos(Phi - atan2(Qy1 - Recy90[2]-Recy44[2],Qx1 - Recx44[2] -Recx90[2])))/Res[1]);
+        flowvsB->Fill(11.0,(cos(Phi - atan2(Qy1 - Recy90[2]-Recy44[2],Qx1 - Recx44[2] -Recx90[2])))/Res[1]);
 }
-if(B>=13 && B<16)
+if(B>=13 && B<16 && (Qx1 - Recx44[3] -Recx90[3])!=0)
 {
-	flowvsB2->Fill(B,(cos(module_pos.GetPhi() - atan2(Qy1 - Recy90[3]-Recy44[3],Qx1 - Recx44[3] -Recx90[3])))/Res[2]);
-	flowvsB->Fill(14.5,(cos(module_pos.GetPhi() - atan2(Qy901 + Qy441 - Recy44[3] - Recy90[3],Qx901 + Qx441 - Recx44[3] -Recx90[3]))));
+        flowvsB2->Fill(B,(cos(Phi - atan2(Qy1 - Recy90[3]-Recy44[3],Qx1 - Recx44[3] -Recx90[3])))/Res[2]);
+        flowvsB->Fill(14.5,(cos(Phi - atan2(Qy1 - Recy90[3]-Recy44[3],Qx1 - Recx44[3] -Recx90[3])))/Res[3]);
+}
 }
 }
 
-        if( B<8)
+        if( B<9)
 	{
 
         Qx44all[1]->Fill(Qx441-Recx44[1]);
@@ -174,7 +175,7 @@ if(B>=13 && B<16)
         ResN[0]=ResN[0]+1;
 //      flowvsB->Fill(4,(cos(module_pos.GetPhi() - atan2(Qy901 + Qy441 - Recy44[1] - Recy90[1],Qx901 + Qx441 - Recx44[1] -Recx90[1]))));
         }
-	if( B>=8 && B<13)
+	if( B>=9 && B<13)
         {
 
         Qx44all[2]->Fill(Qx441-Recx44[2]);
