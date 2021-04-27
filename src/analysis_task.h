@@ -70,12 +70,16 @@ private:
    TProfile* flowvsB2;
    TH1F *PhiModule;
    TProfile* ResRP;
-   TProfile* flowvspT1;
-   TProfile* flowvspT2;
-   TProfile* flowvspT3;
+   TProfile* flowvspT1n;
+   TProfile* flowvspT2n;
+   TProfile* flowvspT3n;
+   TProfile* flowvspT1p;
+   TProfile* flowvspT2p;
+   TProfile* flowvspT3p;
    TProfile* flowvsEta1;
    TProfile* flowvsEta2;
    TProfile* flowvsEta3;
+   TH1F *Phit;
 
 };
 #endif // QUALITY_ASSURANCE_SRC_TREE_READER_H_
