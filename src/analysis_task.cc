@@ -65,9 +65,12 @@ void AnalysisTask::Init(std::map<std::string, void *> &branch_map) {
     gr2 =new TH2F("gr2","resolution for all detector vs impact parameter;B[Fm];Res",3,0,16,100,0,1);
      flowvsB = new TProfile("flowvsB", "directed flow vs impact parameter;B[Fm];v1",100,0,16);
      flowvsB2 = new TProfile("flowvsB2", "directed flow vs impact parameter;B[Fm];v1",10,0,16);
-     flowvspT = new TProfile("flowvspT","directed flow vs pT;pT[GeV/c^2];v1",10,0,2.5);
-     flowvsPhi =new TProfile("flowvsPhi","directed flow vs Phi;Phi[rad];v1",10,-4,4);
-     flowvsEta =new TProfile("flowvsEta","directed flow vs Eta;pseudorapidity;v1",10,-2.5,2.5);
+     flowvspT1 = new TProfile("flowvspT1","directed flow vs pT(central);pT[GeV/c^2];v1",10,0,2.5);
+     flowvspT2 = new TProfile("flowvspT2","directed flow vs pT(semi-central);pT[GeV/c^2];v1",10,0,2.5);
+     flowvspT3 = new TProfile("flowvspT3","directed flow vs pT(peripheral);pT[GeV/c^2];v1",10,0,2.5);
+     flowvsEta1 =new TProfile("flowvsEta1","directed flow vs Eta(central);pseudorapidity;v1",10,-2.5,2.5);
+     flowvsEta2 =new TProfile("flowvsEta2","directed flow vs Eta(semi-central);pseudorapidity;v1",10,-2.5,2.5);
+     flowvsEta3 =new TProfile("flowvsEta3","directed flow vs Eta(peripheral);pseudorapidity;v1",10,-2.5,2.5);
      ResRP =new TProfile("ResRP","Resolution(RP) vs impact parameter;B[Fm];Res(RP)",10,0,16);
      PhiModule =new TH1F("PhiModule","Phi Distribution of Module;Phi[rad]",90,-4,4);
 
@@ -153,33 +156,30 @@ void AnalysisTask::Exec() {
     auto pT = mom3.Pt();
     auto Eta =track.GetEta();
     auto Phi =track.GetPhi();
-    if(abs(Phi)<4 && Eta<=0)
+    if(abs(Phi)<4)
     {
-  if(B<9 && B>0)
+  if(B<9 && B>0 && Eta<=0)
 {
-      flowvsB2->Fill(B,(cos(Phi - atan2(QyR1,QxR1))));
-      flowvsB->Fill(4.5,(cos(Phi - atan2(QyR1,QxR1))));
-      flowvspT->Fill(pT,(cos(Phi - atan2(QyR1,QxR1))));
-      flowvsPhi->Fill(Phi,(cos(Phi - atan2(QyR1,QxR1))));
-      flowvsEta->Fill(Eta,(cos(Phi - atan2(QyR1,QxR1))));
+      flowvsB2->Fill(B,(cos(Phi - atan2(QyR1,QxR1)))/Res[0]);
+      flowvsB->Fill(4.5,(cos(Phi - atan2(QyR1,QxR1)))/Res[0]);
+      flowvspT1->Fill(pT,(cos(Phi - atan2(QyR1,QxR1)))/Res[0]);
+      flowvsEta1->Fill(Eta,(cos(Phi - atan2(QyR1,QxR1)))/Res[0]);
 
 }
 if(B>=9 && B<13)
 {
-        flowvsB2->Fill(B,(cos(Phi - atan2(QyR2,QxR2))));
-        flowvsB->Fill(11.0,(cos(Phi - atan2(QyR2,QxR2))));
-	flowvspT->Fill(pT,(cos(Phi - atan2(QyR2,QxR2))));
-      flowvsPhi->Fill(Phi,(cos(Phi - atan2(QyR2,QxR2))));
-      flowvsEta->Fill(Eta,(cos(Phi - atan2(QyR2,QxR2))));
+        flowvsB2->Fill(B,(cos(Phi - atan2(QyR2,QxR2)))/Res[1]);
+        flowvsB->Fill(11.0,(cos(Phi - atan2(QyR2,QxR2)))/Res[1]);
+	flowvspT2->Fill(pT,(cos(Phi - atan2(QyR2,QxR2)))/Res[1]);
+      flowvsEta2->Fill(Eta,(cos(Phi - atan2(QyR2,QxR2)))/Res[1]);
 
 }
 if(B>=13 && B<16)
 {
-        flowvsB2->Fill(B,(cos(Phi - atan2(QyR3,QxR3))));
-        flowvsB->Fill(14.5,(cos(Phi - atan2(QyR3,QxR3))));
-	flowvspT->Fill(pT,(cos(Phi - atan2(QyR3,QxR3))));
-      flowvsPhi->Fill(Phi,(cos(Phi - atan2(QyR3,QxR3))));
-      flowvsEta->Fill(Eta,(cos(Phi - atan2(QyR3,QxR3))));
+        flowvsB2->Fill(B,(cos(Phi - atan2(QyR3,QxR3)))/Res[2]);
+        flowvsB->Fill(14.5,(cos(Phi - atan2(QyR3,QxR3)))/Res[2]);
+	flowvspT3->Fill(pT,(cos(Phi - atan2(QyR3,QxR3)))/Res[2]);
+      flowvsEta3->Fill(Eta,(cos(Phi - atan2(QyR3,QxR3)))/Res[2]);
 
 }
 }
@@ -252,9 +252,12 @@ void AnalysisTask::Finish() {
 
   PhiModule->Write();
   ResRP->Write();
-  flowvspT->Write();
-  flowvsPhi->Write();
-  flowvsEta->Write();
+  flowvspT1->Write();
+  flowvspT2->Write();
+  flowvspT3->Write();
+  flowvsEta1->Write();
+  flowvsEta2->Write();
+  flowvsEta3->Write();
 
   flowvsB->Write();
   flowvsB2->Write();
