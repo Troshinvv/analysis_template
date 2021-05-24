@@ -34,6 +34,7 @@ private:
   /* pointers to link tree's branches with */
   AnalysisTree::EventHeader* event_header_{nullptr}; 		// event info
   AnalysisTree::TrackDetector* vtx_tracks_{nullptr}; 		        // reconstructed tracks
+  AnalysisTree::Particles* mc_tracks_{nullptr};                             //Mc tracks
   AnalysisTree::ModuleDetector* fhcal_modules_{nullptr}; 		// modules of FhCal branch
   AnalysisTree::ModulePositions fhcal_modules_positions_;
   TH1F* pT_distribution_;
@@ -64,6 +65,9 @@ private:
   TH2F *energyvsb;
   TH2F *gr;
   TH2F *gr2;
+  TH1F *PID_proton;
+  TH2F *dEdX_vs_pz;
+  TH2F *mass2_vs_pz;
     float ResPhin[8]={0,0,0,0,0,0,0,0};
    float ResN[8]={0,0,0,0,0,0,0,0};
    TProfile* flowvsB;
