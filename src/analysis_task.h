@@ -37,12 +37,17 @@ private:
   AnalysisTree::Particles* mc_tracks_{nullptr};                             //Mc tracks
   AnalysisTree::ModuleDetector* fhcal_modules_{nullptr}; 		// modules of FhCal branch
   AnalysisTree::ModulePositions fhcal_modules_positions_;
+  
+  AnalysisTree::Matching* tpc_mc_matching{nullptr};
   TH1F* pT_distribution_;
   TH1F* fhcal_energy_distribution_;
   TH2F*fhcal_modules_xy_;
-  TH2F* pT_vs_eta;
-  TH2F* pT_vs_phi;
-  TH2F* phi_vs_eta;
+  TH2F* TpcpT_vs_eta;
+  TH2F* TpcpT_vs_phi;
+  TH2F* Tpcphi_vs_eta;
+  TH2F* McpT_vs_eta;
+  TH2F* McpT_vs_phi;
+  TH2F* Mcphi_vs_eta;
   TH2F* Energy_vs_moduleId;
   TH1F *Qxall;
   TH1F *Qyall;
@@ -54,40 +59,48 @@ private:
   TH1F *fnall;
   TH1F *fn44;
   TH1F *fn90;
-  TH1F *Qx44all[9];
-  TH1F *Qy44all[9];
-  TH1F *Qx90all[9];
-  TH1F *Qy90all[9];
-  TH1F *fn44all[9];
-  TH1F *fn90all[9];
+  TH1F *Qx44all[17];
+  TH1F *Qy44all[17];
+  TH1F *Qx90all[17];
+  TH1F *Qy90all[17];
+  TH1F *fn44all[17];
+  TH1F *fn90all[17];
   TH1F *Bt;
   TH1F *Btt;
   TH2F *energyvsb;
   TH2F *gr;
   TH2F *gr2;
   TH1F *PID_proton;
-  TH2F *dEdX_vs_pz;
-  TH2F *mass2_vs_pz;
+  TH2F *dEdX_vs_pz_proton;
+  TH2F *mass2_vs_pz_proton;
+  TH2F *dEdX_vs_pz_kaon;
+  TH2F *mass2_vs_pz_kaon;
+  TH2F *dEdX_vs_pz_pion;
+  TH2F *mass2_vs_pz_pion;
+
     float ResPhin[8]={0,0,0,0,0,0,0,0};
    float ResN[8]={0,0,0,0,0,0,0,0};
-   TProfile* flowvsB;
-   TProfile* flowvsB2;
+   TProfile* TpcflowvsBp;
+   TProfile* TpcflowvsBn;
+   TProfile* McflowvsBp;
+   TProfile* McflowvsBn;
+
    TH1F *PhiModule;
-   TProfile* ResRP;
+   TProfile* ResRPS;
+   TProfile* ResRPN;
    TProfile* ResRP3;
    TProfile* ResHalf;
-   TProfile* flowvspT1n;
-   TProfile* flowvspT2n;
-   TProfile* flowvspT3n;
-   TProfile* flowvspT1p;
-   TProfile* flowvspT2p;
-   TProfile* flowvspT3p;
-   TProfile* flowvsEta1;
-   TProfile* flowvsEta2;
-   TProfile* flowvsEta3;
-   TProfile* flowvsEta11;
-   TProfile* flowvsEta22;
-   TProfile* flowvsEta33;
+   TProfile* TpcflowvspT[4];
+   TProfile* TpcflowvsEta[4];
+   TProfile* McflowvspT[4];
+   TProfile* McflowvsEta[4];
+
+   TProfile* TpcflowvspTEta[4];
+   TProfile* TpcflowvsEtapT[4];
+   TProfile* McflowvspTEta[4];
+   TProfile* McflowvsEtapT[4];
+
+
    TH1F *Phit;
 
 };
