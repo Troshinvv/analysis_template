@@ -13,6 +13,7 @@
 #include <AnalysisTree/Detector.hpp>
 #include <AnalysisTree/EventHeader.hpp>
 #include <AnalysisTree/DataHeader.hpp>
+#include <AnalysisTree/Matching.hpp>
 #include <TH1F.h>
 #include <TH2F.h>
 #include <TH3F.h>
@@ -42,10 +43,19 @@ private:
   TH1F* pT_distribution_;
   TH1F* fhcal_energy_distribution_;
   TH2F*fhcal_modules_xy_;
-  TH2F* TpcpT_vs_eta;
+  TH2F* TpcpT_vs_eta_proton;
+  TH2F* TpcpT_vs_eta_kaon;
+TH2F* TpcpT_vs_eta_pion;
+TH2F* TpcpT_vs_eta_all;
+
   TH2F* TpcpT_vs_phi;
   TH2F* Tpcphi_vs_eta;
-  TH2F* McpT_vs_eta;
+  TH2F* McpT_vs_eta_proton;
+  TH2F* McpT_vs_eta_kaon;
+TH2F* McpT_vs_eta_pion;
+TH2F* McpT_vs_eta_all;
+
+
   TH2F* McpT_vs_phi;
   TH2F* Mcphi_vs_eta;
   TH2F* Energy_vs_moduleId;
@@ -77,6 +87,7 @@ private:
   TH2F *mass2_vs_pz_kaon;
   TH2F *dEdX_vs_pz_pion;
   TH2F *mass2_vs_pz_pion;
+  TH2F *dEdX_vs_pz_all;
 
     float ResPhin[8]={0,0,0,0,0,0,0,0};
    float ResN[8]={0,0,0,0,0,0,0,0};
@@ -95,9 +106,9 @@ private:
    TProfile* McflowvspT[4];
    TProfile* McflowvsEta[4];
 
-   TProfile* TpcflowvspTEta[4];
+   TProfile* TpcflowvspTEta[3];
    TProfile* TpcflowvsEtapT[4];
-   TProfile* McflowvspTEta[4];
+   TProfile* McflowvspTEta[3];
    TProfile* McflowvsEtapT[4];
 
 
