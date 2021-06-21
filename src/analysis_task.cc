@@ -16,7 +16,10 @@ void AnalysisTask::Init(std::map<std::string, void *> &branch_map) {
 
   float b_edges[17]={0.,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16};
   float b_edges3[4]={0.,4.,8.,11.};
-  std::string b_edges3txt[4]={"_","central","semi-central","peripheral"};
+  std::string part[3]={"proton","kaon","pion"};
+  std::string partpT[3][3]={{"0.2<pT<0.5 GeV/c (proton)","0.5<pT<1 GeV/c (proton)","1<pT<2.5 GeV/c (proton)"},{"0.2<pT<0.5 GeV/c (positive kaon)","0.5<pT<1 GeV/c (positive kaon)","1<pT<2.5 GeV/c (positive kaon)"},{"0.2<pT<0.5 GeV/c (positive pion)","0.5<pT<1 GeV/c (positive pion)","1<pT<2.5 GeV/c (positive pion)"}};
+  std::string partEta[3][2]={{"0<|Eta|<0.5 (proton)","0.5<|Eta|<1 (proton)"},{"0<|Eta|<0.5 (positive kaon)","0.5<|Eta|<1 (positive kaon)"},{"0<|Eta|<0.5 (positive pion)","0.5<|Eta|<1 (positive pion)"}};
+  std::string b_edges3part[3][3]={{"central(proton)","semi-central(proton)","peripheral(proton)"},{"central(positive kaon)","semi-central(positive kaon)","peripheral(positive kaon)"},{"central(positive pion)","semi-central(positive pion)","peripheral(positive pion)"}};
   energyvsb =new TH2F("Energy in FHCal vs impact parameter",";B [Fm];Energy [GeV]",100,0,16,100,0,30);
   Bt =new TH1F("Impact parameter",";B [Fm];entries",100,0,16);
   Btt =new TH1F("Impact parameter(8)",";B [Fm];entries",8,b_edges);
@@ -31,10 +34,10 @@ McpT_vs_eta_all =new TH2F("McpT_vs_eta_all","pT_vs_eta_all(Mc);eta;p_{T} [GeV/c]
   McpT_vs_phi =new TH2F("McpT_vs_phi","pT_vs_phi(Mc);phi [rad];p_{T} [GeV/c]",100,-4.0,4.0,100,0,2.5);
 
   Mcphi_vs_eta =new TH2F("Mcphi_vs_eta","phi_vs_eta(Mc);eta;phi [rad]",100,-2.5,2.5,100,-4.0,4.0);
-  TpcpT_vs_eta_proton =new TH2F("TpcpT_vs_eta_proton","pT_vs_eta_proton(Tpc);eta;p_{T} [GeV/c^2]",100,-3,3.0,100,0,2.5);
-  TpcpT_vs_eta_kaon =new TH2F("TpcpT_vs_eta_kaon","pT_vs_eta_kaon(Tpc);eta;p_{T} [GeV/c^2]",100,-3,3.0,100,0,2.5);
-  TpcpT_vs_eta_pion =new TH2F("TpcpT_vs_eta_pion","pT_vs_eta_pion(Tpc);eta;p_{T} [GeV/c^2]",100,-3,3.0,100,0,2.5);
-  TpcpT_vs_eta_all =new TH2F("TpcpT_vs_eta_all","pT_vs_eta_all(Tpc);eta;p_{T} [GeV/c^2]",100,-3,3.0,100,0,2.5);
+  TpcpT_vs_eta_proton =new TH2F("TpcpT_vs_eta_proton","pT_vs_eta_proton(Tpc);eta;p_{T} [GeV/c]",100,-3,3.0,100,0,2.5);
+  TpcpT_vs_eta_kaon =new TH2F("TpcpT_vs_eta_kaon","pT_vs_eta_kaon(Tpc);eta;p_{T} [GeV/c]",100,-3,3.0,100,0,2.5);
+  TpcpT_vs_eta_pion =new TH2F("TpcpT_vs_eta_pion","pT_vs_eta_pion(Tpc);eta;p_{T} [GeV/c]",100,-3,3.0,100,0,2.5);
+  TpcpT_vs_eta_all =new TH2F("TpcpT_vs_eta_all","pT_vs_eta_all(Tpc);eta;p_{T} [GeV/c]",100,-3,3.0,100,0,2.5);
 
   TpcpT_vs_phi =new TH2F("TpcpT_vs_phi","pT_vs_phi(Tpc);phi [rad];p_{T} [GeV/c]",100,-4.0,4.0,100,0,2.5);
   Tpcphi_vs_eta =new TH2F("Tpcphi_vs_eta","phi_vs_eta(Tpc);eta;phi [rad]",100,-2.5,2.5,100,-4.0,4.0);
@@ -77,26 +80,40 @@ McpT_vs_eta_all =new TH2F("McpT_vs_eta_all","pT_vs_eta_all(Mc);eta;p_{T} [GeV/c]
     {
     fn90all[j]=new TH1F(Form("fn90all_%i",j),Form("Distribution of event plane angle in second part of FHCal in part %i;Event plane angle fn[rad];entries",j),90,-4,4);
     }
+    for(int j=0;j<3;j++)
+    {
 
-    TpcflowvsBp= new TProfile("TpcflowvsBp","Directed flow vs impact parameter(1>pseudorapidity>0);B[fm];v1",16,b_edges);
-    TpcflowvsBn= new TProfile("TpcflowvsBn","Directed flow vs impact parameter(-1<pesudorapidity<0);B[fm];v1",16,b_edges);
-    McflowvsBp= new TProfile("McflowvsBp","Directed flow vs impact parameter(1>pseudorapidity>0);B[fm];v1",16,b_edges);
-    McflowvsBn= new TProfile("McflowvsBn","Directed flow vs impact parameter(-1<pesudorapidity<0);B[fm];v1",16,b_edges);
+    TpcflowvsB[j]= new TProfile(Form("TpcflowvsB_%p",part[j]),Form("Directed flow vs impact parameter %s;B[fm];v1",part[j]),16,b_edges);
+    TpcPhivsB[j]= new TProfile(Form("TpcPhivsB_%s",part[j]),Form("TpcPhi vs impact parameter %s;B[fm];Phi",part[j]),32,-16,16);
+    McPhivsB[j]= new TProfile(Form("McPhivsB_%s",part[j]),Form("McPhi vs impact parameter %s;B[fm];Phi",part[j]),32,-16,16);
+    McflowvsB[j]= new TProfile(Form("McflowvsB_%s",part[j]),Form("Directed flow vs impact parameter %s;B[fm];v1",part[j]),16,b_edges);
+    }
+//    simflowvsB= new TProfile("simflowvsB","Directed flow vs impact parameter;B[fm];v1",16,b_edges);
 
-     for(int j=1;j<4;j++)
+     for(int i=0;i<3;i++)
      {
-	     TpcflowvspT[j]= new TProfile(Form("TpcflowvspT_%i",j),Form("Directed flow vs pT %i;pT[GeV/c^2];v1",j),10,0,2.5);
-	     TpcflowvsEta[j]= new TProfile(Form("TpcflowvsEta_%i",j),Form("Directed flow vs pseudorapidity %i;pseudorapidity;v1",j),10,-1,1);
-	     McflowvspT[j]= new TProfile(Form("McflowvspT_%i",j),Form("Directed flow vs pT %i;pT[GeV/c^2];v1",j),10,0,2.5);
-             McflowvsEta[j]= new TProfile(Form("McflowvsEta_%i",j),Form("Directed flow vs pseudorapidity %i;pseudorapidity;v1",j),10,-1,1);
-	     TpcflowvsEtapT[j]= new TProfile(Form("TpcflowvsEtapT_%i",j),Form("Directed flow vs pseudorapidity %i;pseudorapidity;v1",j),10,-1,1);
-             McflowvsEtapT[j]= new TProfile(Form("McflowvsEtapT_%i",j),Form("Directed flow vs pseudorapidity %i;pseudorapidity;v1",j),10,-1,1);
+	     for(int j=0;j<3;j++)
+	     {
+
+	     TpcflowvspT[i][j]= new TProfile(Form("TpcflowvspT_%s",b_edges3part[i][j]),Form("Directed flow vs pT %s;pT[GeV/c];v1",b_edges3part[i][j]),10,0,2.5);
+	     TpcflowvsEta[i][j]= new TProfile(Form("TpcflowvsEta_%s",b_edges3part[i][j]),Form("Directed flow vs pseudorapidity %s;pseudorapidity;v1",b_edges3part[i][j]),10,-1,1);
+	     McflowvspT[i][j]= new TProfile(Form("McflowvspT_%s",b_edges3part[i][j]),Form("Directed flow vs pT %s;pT[GeV/c];v1",b_edges3part[i][j]),10,0,2.5);
+             McflowvsEta[i][j]= new TProfile(Form("McflowvsEta_%s",b_edges3part[i][j]),Form("Directed flow vs pseudorapidity %s;pseudorapidity;v1",b_edges3part[i][j]),10,-1,1);
+	     TpcflowvsEtapT[i][j]= new TProfile(Form("TpcflowvsEtapT_%s",partpT[i][j]),Form("Directed flow vs pseudorapidity %s;pseudorapidity;v1",partpT[i][j]),10,-1,1);
+             McflowvsEtapT[i][j]= new TProfile(Form("McflowvsEtapT_%s",partpT[i][j]),Form("Directed flow vs pseudorapidity %s;pseudorapidity;v1",partpT[i][j]),10,-1,1);
+  //           simflowvspT[j]=new TProfile(Form("simflowvspT_%i",j),Form("Directed flow vs pT %i;pT[GeV/c];v1",j),10,0,2.5);
+//	     simflowvsEta[j]= new TProfile(Form("simflowvsEta_%i",j),Form("Directed flow vs pseudorapidity %i;pseudorapidity;v1",j),10,-1,1);
+  //           simflowvsEtapT[j]= new TProfile(Form("simflowvsEtapT_%i",j),Form("Directed flow vs pseudorapidity %i;pseudorapidity;v1",j),1,1);
 
      }
-     for(int j=1;j<3;j++)
+     }
+     for(int i=0;i<3;i++)
      {
-	     TpcflowvspTEta[j]= new TProfile(Form("TpcflowvspTEta_%i",j),Form("Directed flow vs pT %i;pT[GeV/c^2];v1",j),10,0,2.5);
-             McflowvspTEta[j]= new TProfile(Form("McflowvspTEta_%i",j),Form("Directed flow vs pT %i;pT[GeV/c^2];v1",j),10,0,2.5);
+	     for(int j=0;j<2;j++)
+	     {
+	     TpcflowvspTEta[i][j]= new TProfile(Form("TpcflowvspTEta_%s",partEta[i][j]),Form("Directed flow vs pT %s;pT[GeV/c];v1",partEta[i][j]),10,0,2.5);
+             McflowvspTEta[i][j]= new TProfile(Form("McflowvspTEta_%s",partEta[i][j]),Form("Directed flow vs pT %s;pT[GeV/c];v1",partEta[i][j]),10,0,2.5);
+     }
      }
 
 
@@ -111,13 +128,13 @@ McpT_vs_eta_all =new TH2F("McpT_vs_eta_all","pT_vs_eta_all(Mc);eta;p_{T} [GeV/c]
      Phit =new TH1F("Phit","Phit",90,-4,4);
 
     PID_proton =new TH1F("PID_proton",";PI_proton;entries",100,0,1);
-    dEdX_vs_pz_proton =new TH2F("dEdX_vs_p/z_proton","dEdX_vs_p/z proton;p/z [GeV/c^2];dEdX",1000,-5,5,1000,0,15000);
-    mass2_vs_pz_proton =new TH2F("mass2_vs_p/z_proton","mass2_vs_p/z proton;p/z [GeV/c^2];mass2",1000,-5,5,1000,0,5);
-    dEdX_vs_pz_pion =new TH2F("dEdX_vs_p/z_pion","dEdX_vs_p/z pion+;p/z [GeV/c^2];dEdX",1000,-5,5,1000,0,15000);
-    mass2_vs_pz_pion =new TH2F("mass2_vs_p/z_pion","mass2_vs_p/z pion+;p/z [GeV/c^2];mass2",1000,-5,5,1000,0,1);
-    dEdX_vs_pz_kaon =new TH2F("dEdX_vs_p/z_kaon","dEdX_vs_p/z kaon+;p/z [GeV/c^2];dEdX",1000,-5,5,1000,0,15000);
-    mass2_vs_pz_kaon =new TH2F("mass2_vs_p/z_kaon","mass2_vs_p/z kaon+;p/z [GeV/c^2];mass2",1000,-5,5,1000,0,1); 
-    dEdX_vs_pz_all =new TH2F("dEdX_vs_p/z_all","dEdX_vs_p/z all;p/z [GeV/c^2];dEdX",1000,-5,5,1000,0,15000);
+    dEdX_vs_pz_proton =new TH2F("dEdX_vs_p/z_proton","dEdX_vs_p/z proton;p/z [GeV/c];dEdX",1000,-5,5,1000,0,15000);
+    mass2_vs_pz_proton =new TH2F("mass2_vs_p/z_proton","mass2_vs_p/z proton;p/z [GeV/c];mass2",1000,-5,5,1000,0,5);
+    dEdX_vs_pz_pion =new TH2F("dEdX_vs_p/z_pion","dEdX_vs_p/z pion+;p/z [GeV/c];dEdX",1000,-5,5,1000,0,15000);
+    mass2_vs_pz_pion =new TH2F("mass2_vs_p/z_pion","mass2_vs_p/z pion+;p/z [GeV/c];mass2",1000,-5,5,1000,0,1);
+    dEdX_vs_pz_kaon =new TH2F("dEdX_vs_p/z_kaon","dEdX_vs_p/z kaon+;p/z [GeV/c];dEdX",1000,-5,5,1000,0,15000);
+    mass2_vs_pz_kaon =new TH2F("mass2_vs_p/z_kaon","mass2_vs_p/z kaon+;p/z [GeV/c];mass2",1000,-5,5,1000,0,1); 
+    dEdX_vs_pz_all =new TH2F("dEdX_vs_p/z_all","dEdX_vs_p/z all;p/z [GeV/c];dEdX",1000,-5,5,1000,0,15000);
 
 
 
@@ -158,7 +175,11 @@ void AnalysisTask::Exec() {
 	Bt->Fill(B);
 	Btt->Fill(B);
 	float Res[3]={0.4299,0.8392,0.8629};
+	float Res11[11]={0.1345,0.3509,0.55,0.6843,0.7723,0.832,0.8674,0.8851,0.8874,0.8745,0.8269};
 	float Resrp[3]={0.8026,0.6808,0.0679};
+	float pidcode[3]={2212,321,211};
+	float catpT[4]={0.2,0.5,1,2.5};
+	float catEta[3]={0,0.5,1};
 
 	int w=0;
   for( auto& track : *vtx_tracks_->GetChannels() )
@@ -191,6 +212,7 @@ if(pT>0.2 && Eta!=0)
 {	
 TpcpT_vs_eta_all->Fill(Eta,pT);
 }
+
     TpcpT_vs_phi->Fill(Phi,pT);
     Phit->Fill(Phi);
     Tpcphi_vs_eta->Fill(Eta,Phi);
@@ -209,7 +231,7 @@ TpcpT_vs_eta_all->Fill(Eta,pT);
 
       auto sim_pT = sim_track.GetPt(); // getting transverse momentum of matched simulated track
 
-      auto sim_rapidity = sim_track.GetRapidity(); // getting rapidity of matched simulated track
+      auto sim_Eta = sim_track.GetRapidity(); // getting rapidity of matched simulated track
       if(sim_pid==2212 && pT>0.2 && pT<2.5 && abs(Eta)<1)
       {
 	      dEdX_vs_pz_proton->Fill(p/charge,dedx);
@@ -229,6 +251,7 @@ TpcpT_vs_eta_all->Fill(Eta,pT);
       {
       dEdX_vs_pz_all->Fill(p/charge,dedx);
       }
+
 
       w=w+1; 
   }
@@ -264,7 +287,14 @@ TpcpT_vs_eta_all->Fill(Eta,pT);
   }
   float QxR[4]={0.,Qx1 - Recx44[1] -Recx90[1],Qx1 - Recx44[2] -Recx90[2],Qx1 - Recx44[3] -Recx90[3]};
   float QyR[4]={0.,Qy1 - Recy90[1]-Recy44[1],Qy1 - Recy90[2]-Recy44[2],Qy1 - Recy90[3]-Recy44[3]};
-
+float QxR11[11];
+float QyR11[11];
+for(int i=0;i<11;i++)
+{
+	QxR11[i]=Qx1-Recx44R[i] -Recx90R[i];
+	QyR11[i]=Qy1-Recy44R[i] -Recy90R[i];
+}
+w=0;
   for( auto& track : *mc_tracks_->GetChannels() ){
 	  auto McpT = track.GetField<float>(-2);
 	  auto McEta = track.GetField<float>(-6);
@@ -283,55 +313,52 @@ McpT_vs_eta_all->Fill(McEta,McpT);
 
     McpT_vs_phi->Fill(McPhi,McpT);
     Mcphi_vs_eta->Fill(McEta,McPhi);
+for(int k=0;k<3;k++)
+{
+	if(Mcpid==pidcode[k])
+	{
 
-	  for(int i=1;i<4;i++)
+	  for(int i=0;i<3;i++)
 	  {
-		  if(abs(McPhi)<4 && B>b_edges3[i-1] && B<=b_edges3[i] && Mcpid==2212 )
+
+		  if(abs(McPhi)<4 && B>b_edges3[i] && B<=b_edges3[i+1])
 		  {
+
 			  if(McEta>0 && McEta<1)
 			  {
-				  if(McpT>0.2){
-					  McflowvsBp->Fill(B,cos(McPhi-PhiRp));}
-				  McflowvspT[i]->Fill(McpT,cos(McPhi-PhiRp));
+				  if(McpT>0.2 && McpT<2.5){
+					  McflowvsB[k]->Fill(B,cos(McPhi-PhiRp));
+				  McPhivsB[k]->Fill(B,McPhi);
+				  }
+				  McflowvspT[k][i]->Fill(McpT,cos(McPhi-PhiRp));
 			  }
 			  if(McEta<0 && McEta>-1)
 			  {
-				  if(McpT>0.2){
-					  McflowvsBn->Fill(B,cos(McPhi-PhiRp));}
-                                  McflowvspT[i]->Fill(McpT,-cos(McPhi-PhiRp));
+				  if(McpT>0.2 && McpT<2.5){
+					  McflowvsB[k]->Fill(B,-cos(McPhi-PhiRp));
+				  McPhivsB[k]->Fill(-B,McPhi);
+				  }
+                                  McflowvspT[k][i]->Fill(McpT,-cos(McPhi-PhiRp));
 			  }
-			 if(McpT>0.2)
-                          {McflowvsEta[i]->Fill(McEta,cos(McPhi-PhiRp));}
+			 if(McpT>0.2 && McpT<2.5)
+                          {McflowvsEta[k][i]->Fill(McEta,cos(McPhi-PhiRp));}
 		  }
+		  if(B>0 && B<=11 && McpT>catpT[i] && McpT<=catpT[i+1])
+		  {
+	McflowvsEtapT[k][i]->Fill(McEta,cos(McPhi-PhiRp));
 }
-if(Mcpid ==2212)
-{
-if(McpT>0.2 && McpT<0.5)
-{
-	McflowvsEtapT[1]->Fill(McEta,cos(McPhi-PhiRp));
 }
-if(McpT>=0.5 && McpT<1)
+for(int i=0;i<2;i++)
+{
+	if(abs(McEta)>catEta[i] && abs(McEta)<=catEta[i+1] && B>0 && B<=11)
 	{
-        McflowvsEtapT[2]->Fill(McEta,cos(McPhi-PhiRp));
-}
-if(McpT>=1 && McpT<2.5)
-{
-        McflowvsEtapT[3]->Fill(McEta,cos(McPhi-PhiRp));
-}
 
-if(abs(McEta>0) && abs(McEta<0.5))
-		{
         if(McEta>0)
-        McflowvspTEta[1]->Fill(McpT,cos(McPhi-PhiRp));
+        McflowvspTEta[k][i]->Fill(McpT,cos(McPhi-PhiRp));
         else
-                McflowvspTEta[1]->Fill(McpT,-cos(McPhi-PhiRp));
+                McflowvspTEta[k][i]->Fill(McpT,-cos(McPhi-PhiRp));
 }
-if(abs(McEta>=0.5) && abs(McEta<1))
-                {
-        if(McEta>0)
-        McflowvspTEta[2]->Fill(McpT,cos(McPhi-PhiRp));
-        else
-                McflowvspTEta[2]->Fill(McpT,-cos(McPhi-PhiRp));
+}
 }
 }
 
@@ -340,68 +367,145 @@ if(abs(McEta>=0.5) && abs(McEta<1))
 
 
 
-
 }
+w=0;
  for( auto& track : *vtx_tracks_->GetChannels() ){
     auto mom3 = track.GetMomentum3();
     auto TpcpT = mom3.Pt();
     auto TpcEta =track.GetEta();
     auto TpcPhi =track.GetPhi();
-    auto pid_pr = track.GetField<float>(9);
-    auto pid_kaon = track.GetField<float>(8);
-    auto pid_pion = track.GetField<float>(7);
+    float pid_pr = track.GetField<float>(9);
+    float pid_kaon = track.GetField<float>(8);
+    float pid_pion = track.GetField<float>(7);
+    float probpid[3]={pid_pr,pid_kaon,pid_pion};
     auto charge = track.GetField<int>(2);
-          for(int i=1;i<4;i++)
+    auto matched_track = tpc_mc_matching->GetMatchDirect(w); // matching simulated track's ID to current reconstructed track
+
+      //из бранча с сим-треками(true-траекториями) берётся соответствующий трек (набор кин. характеристик)
+      auto sim_track = mc_tracks_->GetChannel(matched_track);    // getting matched simulated track // changed i->matched_track
+      auto sim_pid = sim_track.GetPid();                           // getting PID of matched simulated track
+      auto sim_Phi =sim_track.GetPhi();
+     auto sim_pT = sim_track.GetPt(); // getting transverse momentum of matched simulated track
+
+      auto sim_Eta = sim_track.GetRapidity(); // getting rapidity of matched simulated track
+
+          for(int k=0;k<3;k++)
           {
-                  if(abs(TpcPhi)<4 && B>b_edges3[i-1] && B<=b_edges3[i] && pid_pr>0.95 && charge >0)
+		  if( probpid[k]>0.95 && charge>0)
+		  {
+			  for(int i=0;i<3;i++)
+			  {
+                  if(abs(TpcPhi)<4 && B>b_edges3[i] && B<=b_edges3[i+1])
                   {
                           if(TpcEta>0.2 && TpcEta<1)
                           {
-                                  if(TpcpT>0.2){
-                                  TpcflowvsBp->Fill(B,(cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);}
-                                  TpcflowvspT[i]->Fill(TpcpT,(cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);
+                                  if(TpcpT>0.2 && TpcpT<2.5)
+				  {
+				  TpcPhivsB[k]->Fill(B,TpcPhi);
+				  }
+                                  TpcflowvspT[k][i]->Fill(TpcpT,(cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);
                           }
                           if(TpcEta<-0.2 && TpcEta>-1)
                           {
-                                  if(TpcpT>0.2){
-                                          TpcflowvsBn->Fill(B,(cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);}
-                                  TpcflowvspT[i]->Fill(TpcpT,(-cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);
+                                  if(TpcpT>0.2 && TpcpT<2.5){
+				  TpcPhivsB[k]->Fill(-B,TpcPhi);
+				  }
+                                  TpcflowvspT[k][i]->Fill(TpcpT,(-cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);
                           }
-                          if(TpcpT>0.2)
-                          {TpcflowvsEta[i]->Fill(TpcEta,(cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);}
 
+                          if(TpcpT>0.2 && TpcpT<2.5)
+                          {TpcflowvsEta[k][i]->Fill(TpcEta,(cos(TpcPhi-atan2(QyR[i],QxR[i])))/Res[i]);}
 
-			  if(TpcpT>0.2 && TpcpT<0.5)
-{
-        TpcflowvsEtapT[1]->Fill(TpcEta,cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
+		  }
+		  if(B>0 && B<=11 && TpcpT>catpT[i] && TpcpT<=catpT[i+1])
+		 {
+        TpcflowvsEtapT[k][i]->Fill(TpcEta,cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
 }
-if(TpcpT>=0.5 && TpcpT<1)
-{
-        TpcflowvsEtapT[2]->Fill(TpcEta,cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
 }
-if(TpcpT>=1 && TpcpT<2.5)
+for(int i=0;i<2;i++)
 {
-        TpcflowvsEtapT[3]->Fill(TpcEta,cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
-}
-
-if(abs(TpcEta>0) && abs(TpcEta<0.5))
-                {
+	if(abs(TpcEta)>catEta[i] && abs(TpcEta)<=catEta[i+1] && B>0 && B<=11)
+	{
         if(TpcEta>0)
-        TpcflowvspTEta[1]->Fill(TpcpT,cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
+        TpcflowvspTEta[k][i]->Fill(TpcpT,cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
         else
-                TpcflowvspTEta[1]->Fill(TpcpT,-cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
-}
-if(abs(TpcEta>=0.5) && abs(TpcEta<1))
-                {
-        if(TpcEta>0)
-        TpcflowvspTEta[2]->Fill(TpcpT,cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
-        else
-                TpcflowvspTEta[2]->Fill(TpcpT,-cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
+                TpcflowvspTEta[k][i]->Fill(TpcpT,-cos(TpcPhi-atan2(QyR[i],QxR[i]))/Res[i]);
 }
 
 
                   }
+
+/*                  if( B>b_edges3[i-1] && B<=b_edges3[i] && sim_pid==211)
+                  {
+                          if(sim_Eta>0.2 && sim_Eta<1)
+                          {
+                                  if(sim_pT>0.2 && sim_pT<2.5){
+                                  simflowvsB->Fill(B,(cos(sim_Phi-atan2(QyR[i],QxR[i])))/Res[i]);}
+                                  simflowvspT[i]->Fill(sim_pT,(cos(sim_Phi-atan2(QyR[i],QxR[i])))/Res[i]);
+                          }
+                          if(sim_Eta<-0.2 && sim_Eta>-1)
+                          {
+                                  if(sim_pT>0.2 && sim_pT<2.5){
+                                          simflowvsB->Fill(B,(-cos(sim_Phi-atan2(QyR[i],QxR[i])))/Res[i]);}
+                                  simflowvspT[i]->Fill(sim_pT,(-cos(sim_Phi-atan2(QyR[i],QxR[i])))/Res[i]);
+                          }
+                          if(sim_pT>0.2 && sim_pT<2.5)
+                          {simflowvsEta[i]->Fill(sim_Eta,(cos(sim_Phi-atan2(QyR[i],QxR[i])))/Res[i]);}
+
+
+                        if(sim_pT>0.2 && sim_pT<0.5)
+{
+        simflowvsEtapT[1]->Fill(sim_Eta,cos(sim_Phi-atan2(QyR[i],QxR[i]))/Res[i]);
 }
+if(sim_pT>=0.5 && sim_pT<1)
+{
+        simflowvsEtapT[2]->Fill(sim_Eta,cos(sim_Phi-atan2(QyR[i],QxR[i]))/Res[i]);
+}
+if(sim_pT>=1 && sim_pT<2.5)
+{
+        simflowvsEtapT[3]->Fill(sim_Eta,cos(sim_Phi-atan2(QyR[i],QxR[i]))/Res[i]);
+}
+
+if(abs(sim_Eta>0) && abs(sim_Eta<0.5))
+                {
+        if(sim_Eta>0)
+        simflowvspTEta[1]->Fill(sim_pT,cos(sim_Phi-atan2(QyR[i],QxR[i]))/Res[i]);
+        else
+                simflowvspTEta[1]->Fill(sim_pT,-cos(sim_Phi-atan2(QyR[i],QxR[i]))/Res[i]);
+}
+if(abs(sim_Eta>=0.5) && abs(sim_Eta<1))
+                {
+        if(sim_Eta>0)
+        simflowvspTEta[2]->Fill(sim_pT,cos(sim_Phi-atan2(QyR[i],QxR[i]))/Res[i]);
+        else
+                simflowvspTEta[2]->Fill(sim_pT,-cos(sim_Phi-atan2(QyR[i],QxR[i]))/Res[i]);
+} 
+
+
+                  
+} */
+
+for(int i=0;i<11;i++)
+          {
+                  if(abs(TpcPhi)<4 && B>b_edges[i] && B<=b_edges[i+1])
+                  {
+                          if(TpcEta>0.2 && TpcEta<1)
+                          {
+                                  if(TpcpT>0.2 && TpcpT<2.5){
+                                  TpcflowvsB[k]->Fill(B,(cos(TpcPhi-PhiRp)));}
+                          }
+                          if(TpcEta<-0.2 && TpcEta>-1)
+                          {
+                                  if(TpcpT>0.2 && TpcpT<2.5){
+                                          TpcflowvsB[k]->Fill(B,(-cos(TpcPhi-PhiRp)));}
+                                  }
+                          }
+		  }
+}
+}
+	  
+w=w+1;
+
 }
 
 for(int j=1;j<17;j++)
@@ -532,26 +636,38 @@ void AnalysisTask::Finish() {
   ResRPN->Write();
   ResRP3->Write();
   ResHalf->Write();
- 
-TpcflowvsBp->Write();
-TpcflowvsBn->Write();
-McflowvsBp->Write();
-McflowvsBn->Write();
-for(int j=1;j<4;j++)
+ for(int k=0;k<3;k++)
+ {
+
+TpcflowvsB[k]->Write();
+TpcPhivsB[k]->Write();
+McPhivsB[k]->Write();
+McflowvsB[k]->Write();
+ }
+/*simflowvsB->Write();*/
+
+for(int k=0;k<3;k++)
 {
-	TpcflowvspT[j]->Write();
-	TpcflowvsEta[j]->Write();
-	McflowvspT[j]->Write();
-	McflowvsEta[j]->Write();
-	TpcflowvsEtapT[j]->Write();
-        McflowvsEtapT[j]->Write();
+	for(int j=0;j<3;j++)
+	{
+	TpcflowvspT[k][j]->Write();
+	TpcflowvsEta[k][j]->Write();
+	McflowvspT[k][j]->Write();
+	McflowvsEta[k][j]->Write();
+//	simflowvsEta[j]->Write();
+//	simflowvspT[j]->Write();
+	TpcflowvsEtapT[k][j]->Write();
+        McflowvsEtapT[k][j]->Write();
+//	simflowvsEtapT[j]->Write();
 
 }
-for(int j=1;j<3;j++)
+for(int j=0;j<2;j++)
 {
-	TpcflowvspTEta[j]->Write();
-        McflowvspTEta[j]->Write();
+	TpcflowvspTEta[k][j]->Write();
+        McflowvspTEta[k][j]->Write();
+//	simflowvspTEta[j]->Write();
 
+}
 }
 
   pT_distribution_->Write();

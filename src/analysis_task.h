@@ -91,25 +91,31 @@ TH2F* McpT_vs_eta_all;
 
     float ResPhin[8]={0,0,0,0,0,0,0,0};
    float ResN[8]={0,0,0,0,0,0,0,0};
-   TProfile* TpcflowvsBp;
-   TProfile* TpcflowvsBn;
-   TProfile* McflowvsBp;
-   TProfile* McflowvsBn;
+   TProfile* TpcflowvsB[3];
+   TProfile* TpcPhivsB[3];
+   TProfile* McPhivsB[3];
+   TProfile* McflowvsB[3];
+ //  TProfile* simflowvsB;
 
    TH1F *PhiModule;
    TProfile* ResRPS;
    TProfile* ResRPN;
    TProfile* ResRP3;
    TProfile* ResHalf;
-   TProfile* TpcflowvspT[4];
-   TProfile* TpcflowvsEta[4];
-   TProfile* McflowvspT[4];
-   TProfile* McflowvsEta[4];
+   TProfile* TpcflowvspT[3][3];
+   TProfile* TpcflowvsEta[3][3];
+   TProfile* McflowvspT[3][3];
+   TProfile* McflowvsEta[3][3];
+ //  TProfile* simflowvspT[4];
+ //  TProfile* simflowvsEta[4];
 
-   TProfile* TpcflowvspTEta[3];
-   TProfile* TpcflowvsEtapT[4];
-   TProfile* McflowvspTEta[3];
-   TProfile* McflowvsEtapT[4];
+   TProfile* TpcflowvspTEta[3][2];
+   TProfile* TpcflowvsEtapT[3][3];
+   TProfile* McflowvspTEta[3][2];
+   TProfile* McflowvsEtapT[3][3];
+ //  TProfile* simflowvspTEta[3];
+ //  TProfile* simflowvsEtapT[4];
+
 
 
    TH1F *Phit;
